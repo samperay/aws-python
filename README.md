@@ -1,4 +1,4 @@
-# aws-python-scripts
+# aws-python
 Manage/Maintain AWS Cloud infra using Python. 
 
-Boto shall be used as Amazon Web Services (AWS) SDK for this
+Boto shall be used as Amazon Web Services (AWS) SDK.
