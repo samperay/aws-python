@@ -1,9 +1,10 @@
 import boto3
 import csv
 
+
 ec2client = boto3.client('ec2')
 response = ec2client.describe_instances()
- 
+
 def getec2_instances():
   with open('./ec2_inventory.csv', 'w') as csvfile:
     # Write Header for csv file 
