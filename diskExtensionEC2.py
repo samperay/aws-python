@@ -3,7 +3,14 @@
 import boto3
 import os
 import paramiko
+import sys
 from pprint import pprint
+
+class Error(Exception):
+  pass
+
+class VolumeModificationRateExceeded(Error):
+  pass
 
 
 aws_mgmt_console = boto3.session.Session(profile_name="default",region_name="ap-south-1")
@@ -12,11 +19,10 @@ aws_mgmt_console = boto3.session.Session(profile_name="default",region_name="ap-
 ec2_client = aws_mgmt_console.client(service_name="ec2",region_name="ap-south-1")
 
 # Get Required Info from Instance
-for each_item in ec2_client.describe_instances()['Reservations']
+for each_item in ec2_client.describe_instances()['Reservations']:
   for each_instance in each_item['Instances']:
     public_ip = each_instance['PublicIpAddress']
     public_dns_name = each_instance['PublicDnsName']
-
 
 # Get list of Volume ID and its associated Instance ID
 response = ec2_client.describe_volumes()['Volumes']
@@ -41,27 +47,36 @@ print("Volume ID:", volume_id)
 print("Device Name:", device)
 print("Current Disk Size:", current_size)
 
-print("Increasing volume size from AWS ...")
-volumemodify = ec2_client.modify_volume(
-  DryRun = False,
-  VolumeId = volume_id,
-  Size = 10,
-  VolumeType = volume_type
-)
-
-print("Volume has been modified from AWS System..")
-for each_item in volumemodify['VolumeModification']:
-  print("Actual size",each_item['OriginalSize'], "Extending size", each_item['TargetSize'])
+if current_size == 12:
+  print("Disk already same size as target size.. exiting")
+  sys.exit(0)
+else:
+  print("Attempting to increasing volume size from AWS ...")
+  volumemodify = ec2_client.modify_volume(
+    DryRun = False,
+    VolumeId = volume_id,
+    Size = 12,
+    VolumeType = volume_type
+  )
+  print("Volume has been modified from AWS System..")
 
 # Logging into the instance to get disk partitions using paramiko
 
 key = paramiko.RSAKey.from_private_key_file("/home/samperay/MyLinuxEC2KeyPair.pem")
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.connect(hostname="public_ip", username="ec2-user", pkey=key)
+client.connect(hostname=public_ip, username="ec2-user", pkey=key)
 
-# Execute a command(cmd) after connecting/ssh to an instance
-stdin, stdout, stderr = client.exec_command("/tmp/resize_xvda1.sh")
+localfile = "/home/samperay/Documents/gitprojects/aws-python/getDiskInfo.py"
+remotefile = "/tmp/getDiskInfo.py"
+
+# Copy file locally to remote host
+sftp = client.open_sftp()
+sftp.put(localfile, remotefile)
+sftp.close()
+
+#Execute a command(cmd) after connecting/ssh to an instance
+stdin,stdout,stderr = client.exec_command("chmod +x /tmp/getDiskInfo.py; python /tmp/getDiskInfo.py")
 print(stdout.read())
 
 # close the client connection once the job is done
