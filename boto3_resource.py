@@ -30,6 +30,6 @@ print(" ----------------------- ")
 print("Listing EC2 Instacnes ")
 
 for each_instance in aws_ec2_console.instances.all():
-  print(dir(each_instance.InstanceId))
+  print(each_instance.id)
 
 print(" ----------------------- ")
