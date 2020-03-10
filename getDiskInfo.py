@@ -27,10 +27,9 @@ output = df.communicate()[0]
 device, Type, size, used, available, percent, mountpoint = output.split("\n")[1].split()
 
 if Type == 'xfs':
-  os.system('sudo xfs_growfs -d '+mountpoint)
+  os.system('sudo xfs_growfs -d'+mountpoint)
   print('file system has been extended')
 elif Type == 'ext3' or 'ext4':
   print('Need to work on ext file systems')
 
 sys.exit(0)
-
