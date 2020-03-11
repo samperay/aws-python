@@ -17,17 +17,21 @@ def partitions(disk):
 disk = physical_drives()
 disk_part = partitions(disk[0])
 
-conv_str = ' '.join(map(str, disk_part))
-main_device = "/dev/" + conv_str
+conv_str = ' '.join(map(str, disk))
+root_device = "/dev/"+conv_str
+
+conv_str1 = ' '.join(map(str, disk_part))
+root_partition = "/dev/"+conv_str1
 
 # Fetching mount point from main_device
 
-df = subprocess.Popen(["df", "-hT", main_device], stdout=subprocess.PIPE)
+df = subprocess.Popen(["df", "-hT", root_partition], stdout=subprocess.PIPE)
 output = df.communicate()[0]
 device, Type, size, used, available, percent, mountpoint = output.split("\n")[1].split()
 
 if Type == 'xfs':
-  os.system('sudo xfs_growfs -d'+mountpoint)
+  os.system('sudo growpart '+root_device+' 1')
+  os.system('sudo xfs_growfs -d '+mountpoint)
   print('file system has been extended')
 elif Type == 'ext3' or 'ext4':
   print('Need to work on ext file systems')
