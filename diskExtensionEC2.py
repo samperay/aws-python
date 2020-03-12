@@ -16,9 +16,11 @@ ec2_client = aws_mgmt_console.client(service_name="ec2",region_name="ap-south-1"
 for each_item in ec2_client.describe_instances()['Reservations']:
   for each_instance in each_item['Instances']:
     instance_state = each_instance['State']['Name']
+    instance_id = each_instance['InstanceId']
     if instance_state == 'running' and each_instance.get('PublicIpAddress') is not None:
       public_ip = each_instance.get('PublicIpAddress')
       print("Public_Ip:",public_ip)
+      print('Instance_ID:', instance_id)
 
 # Get list of Volume ID and its associated Instance ID
 response = ec2_client.describe_volumes()['Volumes']
@@ -66,34 +68,12 @@ else:
 
 # Logging into the instance to get disk partitions using paramiko
 
-# key = paramiko.RSAKey.from_private_key_file("/home/samperay/MyLinuxEC2KeyPair.pem")
-# client = paramiko.SSHClient()
-# client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-# client.connect(hostname=public_ip, username="ec2-user", pkey=key)
-
-# localfile = "/home/samperay/Documents/gitprojects/aws-python/getDiskInfo.py"
-# remotefile = "/tmp/getDiskInfo.py"
-
-# # Copy file locally to remote host
-# sftp = client.open_sftp()
-# sftp.put(localfile, remotefile)
-# sftp.close()
-
-# #Execute a command(cmd) after connecting/ssh to an instance
-# stdin,stdout,stderr = client.exec_command("chmod +x /tmp/getDiskInfo.py; python /tmp/getDiskInfo.py")
-# print(stdout.read())
-
-# # close the client connection once the job is done
-# client.close()
-
-# ====== Windows testing =======
-
-key = paramiko.RSAKey.from_private_key_file("E:\\aws-keys\ebsdemo.pem")
+key = paramiko.RSAKey.from_private_key_file("/home/samperay/MyLinuxEC2KeyPair.pem")
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 client.connect(hostname=public_ip, username="ec2-user", pkey=key)
 
-localfile = "E:\\projects\\aws-python\getDiskInfo.py"
+localfile = "/home/samperay/Documents/gitprojects/aws-python/getDiskInfo.py"
 remotefile = "/tmp/getDiskInfo.py"
 
 # Copy file locally to remote host
@@ -107,3 +87,25 @@ print(stdout.read())
 
 # close the client connection once the job is done
 client.close()
+
+# ====== Windows testing =======
+
+# key = paramiko.RSAKey.from_private_key_file("E:\\aws-keys\ebsdemo.pem")
+# client = paramiko.SSHClient()
+# client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# client.connect(hostname=public_ip, username="ec2-user", pkey=key)
+
+# localfile = "E:\\projects\\aws-python\getDiskInfo.py"
+# remotefile = "/tmp/getDiskInfo.py"
+
+# # Copy file locally to remote host
+# sftp = client.open_sftp()
+# sftp.put(localfile, remotefile)
+# sftp.close()
+
+# #Execute a command(cmd) after connecting/ssh to an instance
+# stdin,stdout,stderr = client.exec_command("chmod +x /tmp/getDiskInfo.py; python /tmp/getDiskInfo.py")
+# print(stdout.read())
+
+# # close the client connection once the job is done
+# client.close()
