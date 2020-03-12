@@ -41,8 +41,10 @@ for each_item in ec2_client.describe_volumes(VolumeIds=[volume_id])['Volumes']:
     current_state = each_item['State']
     volume_type = each_item['VolumeType']
   
+size = current_size + 2
+
 #Extending volume from AWS
-volumemodify = ec2_client.modify_volume(DryRun = False, VolumeId = volume_id, Size = 10, VolumeType = volume_type)
+volumemodify = ec2_client.modify_volume(DryRun = False, VolumeId = volume_id, Size = size, VolumeType = volume_type)
 print('Extending volume from AWS ......')
 sleep(300)
 print("Volume has been modified from AWS System..")
