@@ -5,6 +5,7 @@ import os
 import paramiko
 import sys
 import urllib2
+import re
 import subprocess
 from pprint import pprint
 from time import sleep
@@ -23,7 +24,7 @@ output = df.communicate()[0]
 device, Type, size, used, available, percent, mountpoint = output.split("\n")[1].split()
 
 percent_int = int(percent.split('%')[0]) # 14
-size_int = int(size.split('G')[0])
+size_int = int(re.search(r'\d+', size).group())
 
 if percent_int <= disk_threshold:
     print('disk size is below threshold.. No action.. exiting')
