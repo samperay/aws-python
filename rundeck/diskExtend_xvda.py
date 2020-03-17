@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 import boto3
+import botocore
 import os
-import paramiko
 import sys
 import urllib2
 import subprocess
@@ -44,11 +44,15 @@ for each_item in ec2_client.describe_volumes(VolumeIds=[volume_id])['Volumes']:
 size = current_size + 2
 
 #Extending volume from AWS
-volumemodify = ec2_client.modify_volume(DryRun = False, VolumeId = volume_id, Size = size, VolumeType = volume_type)
-print('Extending volume from AWS ......')
-sleep(300)
-print("Volume has been modified from AWS System..")
-
+try:
+  volumemodify = ec2_client.modify_volume(DryRun = False, VolumeId = volume_id, Size = size, VolumeType = volume_type)
+  print('Extending volume from AWS ......')
+  sleep(300)
+  print("Volume has been modified from AWS System..")
+except botocore.exceptions.ClientError:
+  print('Error: Youve reached the maximum modification rate per volume limit')
+  sys.exit(1)
+  
 root_partition = devicename+'1'
 
 df = subprocess.Popen(["df", "-hT", root_partition], stdout=subprocess.PIPE)
