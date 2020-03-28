@@ -15,7 +15,7 @@ from os.path import basename, dirname
 block_device = urllib2.urlopen("http://169.254.169.254/latest/meta-data/block-device-mapping/ami").read()
 root_partition = block_device + '1'
 
-disk_threshold = 85
+disk_threshold = 80
 
 # Get Current Disk Details 
 
