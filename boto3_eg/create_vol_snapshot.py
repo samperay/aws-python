@@ -45,7 +45,7 @@ for each_volume_id in volume_list:
                     },
                     {
                         'Key': 'Name',
-                        'Value': 'rundeck-master'
+                        'Value': 'rundeckmaster'
                     },
                 ] 
             },
