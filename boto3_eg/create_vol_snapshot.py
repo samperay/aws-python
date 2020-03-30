@@ -57,3 +57,4 @@ print('snapshots:',snapshotids)
 waiter= ec2_client.get_waiter('snapshot_completed')
 waiter.wait(SnapshotIds=snapshotids)
 print('Snapsot completed for volumes ..',volume_list )
+
