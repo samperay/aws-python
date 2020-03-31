@@ -29,7 +29,7 @@ snapshotids=[]
 for each_volume_id in volume_list:
     print("taking snapshot", each_volume_id)
     response=ec2_client.create_snapshot(
-        Description='snapshot from lambda,cloudwatch for rundeck production',
+        Description='snapshot rundeck production',
         VolumeId=each_volume_id,
         TagSpecifications=[
             {
