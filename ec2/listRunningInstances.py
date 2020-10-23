@@ -7,13 +7,11 @@ ec2 = boto3.resource('ec2')
 
 instances = ec2.instances.filter(
     Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
-print("instance-id", " "*10,
-      "key_name", " "*10,
-      "public_ip", " "*10,
-      "private_ip", " "*10,
-      "instance_type", " "*10,
+print("instance-id", " "*7,
+      "instance_type", " "*2,
      )
+print("-"*30)
 
 for instance in instances:
-    print(instance.id,instance.key_name,instance.public_ip_address,instance.private_ip_address,instance.instance_type)
+    print(instance.id,instance.instance_type)
 
