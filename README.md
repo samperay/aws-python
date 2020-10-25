@@ -1,6 +1,11 @@
 # aws-python
-Manage/Maintain AWS Cloud infra using Python. 
 
-Boto shall be used as Amazon Web Services (AWS) SDK.
+Python scripts written using Boto3 library to manage AWS resources
 
-This repository also contains code for security for aws infra using python.
+## Summary
+
+- boto3_eg practice examples for boto3 ( sandbox enviornment )
+- ec2-console: Directory containes EC2 console actions from CLI
+- iam: IAM console 
+- lambda: serverless scripts 
+- rundeck: aws python managed scripts for rundeck project
